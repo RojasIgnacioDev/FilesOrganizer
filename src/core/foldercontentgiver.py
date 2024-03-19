@@ -1,17 +1,20 @@
 from os import stat
-from stat import FILE_ATTRIBUTE_HIDDEN as HIDDEN_FILE
-from stat import FILE_ATTRIBUTE_SYSTEM as SYSTEM_FILE
-from stat import FILE_ATTRIBUTE_READONLY as READONLY_FILE
+from stat import (
+    FILE_ATTRIBUTE_HIDDEN as HIDDEN_FILE,
+    FILE_ATTRIBUTE_SYSTEM as SYSTEM_FILE,
+    FILE_ATTRIBUTE_READONLY as READONLY_FILE,
+)
 from pathlib import Path
 from enum import Enum
+from enum import auto
 
 class DirectoryType(Enum):
-    PATH_OBJECT = 0
-    ABSOLUTE_PATH = 1
-    ONLY_NAME = 2
+    PATH_OBJECT = auto()
+    ABSOLUTE_PATH = auto()
+    NAME_ONLY = auto()
 
 class FolderContentGiver:
-    banned_attributes = [
+    banned_file_attributes = [
         HIDDEN_FILE,
         SYSTEM_FILE,
         READONLY_FILE,
@@ -20,7 +23,6 @@ class FolderContentGiver:
     def __init__(self, path):
         self.path = path
         self.directories = list[Path]
-
 
     def files_and_folders(self, format=DirectoryType.PATH_OBJECT):
         """
@@ -48,14 +50,13 @@ class FolderContentGiver:
         folders = self._format_directories(folders, format)
         return folders
 
-
     def _format_directories(self, directories, format : DirectoryType):
         match format:
             case DirectoryType.PATH_OBJECT:
                 return [dir for dir in directories]
             case DirectoryType.ABSOLUTE_PATH:
                 return self._directories_absolute_path(directories)
-            case DirectoryType.ONLY_NAME:
+            case DirectoryType.NAME_ONLY:
                 return self._directories_name(directories)
 
     def _directories_name(self, directories):
@@ -78,15 +79,15 @@ class FolderContentGiver:
         secure_directories = []
 
         for directory in unsecure_directories:
-            if not self._has_banned_attributes(directory):
+            if not self._has_banned_file_attributes(directory):
                 secure_directories.append(directory)
         
         return secure_directories
     
-    def _has_banned_attributes(self, directory: Path):
+    def _has_banned_file_attributes(self, directory: Path):
         attributes = stat(directory).st_file_attributes
         # Check against all banned attributes
-        for banned_attribute in self.banned_attributes:
+        for banned_attribute in self.banned_file_attributes:
             if attributes & banned_attribute:
                 return True
         return False
