@@ -8,10 +8,7 @@ from pathlib import Path
 from enum import Enum
 from enum import auto
 
-class DirectoryType(Enum):
-    PATH_OBJECT = auto()
-    ABSOLUTE_PATH = auto()
-    NAME_ONLY = auto()
+from src.constants import DirectoryType
 
 class FolderContentGiver:
     banned_file_attributes = [
