@@ -30,7 +30,7 @@ class FolderContentGiver:
         """
         directories = self._secure_directories(self.path)
         files_and_folders = self._format_directories(directories, format)
-        return directories
+        return files_and_folders
 
     def files(self, format=DirectoryType.PATH_OBJECT):
         """
