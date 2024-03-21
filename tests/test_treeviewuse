@@ -1,0 +1,39 @@
+import tkinter as tk
+from tkinter import ttk
+
+def main():
+    root = tk.Tk()
+    root.title("Treeview Example")
+    root.geometry("400x300")
+
+    # Create a Treeview widget
+    tree = ttk.Treeview(root)
+
+    # Define columns
+    tree["columns"] = ("Name", "Age", "Country")
+
+    # Format columns
+    tree.column("#0", width=100, minwidth=50, stretch=tk.NO)  # First column (ID)
+    tree.column("Name", width=100, minwidth=50, stretch=tk.NO)  # Second column (Name)
+    tree.column("Age", width=100, minwidth=50, stretch=tk.NO)  # Third column (Age)
+    tree.column("Country", width=100, minwidth=50, stretch=tk.NO)  # Fourth column (Country)
+
+    # Add column headings
+    tree.heading("#0", text="ID", anchor=tk.W)
+    tree.heading("Name", text="Name", anchor=tk.W)
+    tree.heading("Age", text="Age", anchor=tk.W)
+    tree.heading("Country", text="Country", anchor=tk.W)
+
+    # Add data to the Treeview
+    tree.insert("", tk.END, text="1", values=("John Doe", "30", "USA"))
+    tree.insert("", tk.END, text="2", values=("Jane Smith", "25", "Canada"))
+    tree.insert("", tk.END, text="3", values=("Alice Johnson", "35", "UK"))
+    tree.insert("", tk.END, text="4", values=("Bob Brown", "40", "Australia"))
+
+    # Pack the Treeview widget
+    tree.pack(expand=True, fill="both")
+
+    root.mainloop()
+
+if __name__ == "__main__":
+    main()
