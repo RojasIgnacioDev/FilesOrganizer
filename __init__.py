@@ -1,5 +1,5 @@
-from src.mainprogram import MainProgram
+from src.application import Application
 
 if __name__ == "__main__":
-    app = MainProgram()
-    app.run()
+    app = Application()
+    app.mainloop()
