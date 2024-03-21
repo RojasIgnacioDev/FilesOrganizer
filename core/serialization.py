@@ -118,18 +118,6 @@ class Serializer():
 
     DATA_FOLDER_NAME = "data"
     DEFAULT_CONFIG_FILE_NAME = "defaultconfig.pickle"
-    # Getting the projects directory
-    current_file_path = pathlib.Path(__file__)
-    project_src_directory = current_file_path.parent
-    project_directory = project_src_directory.parent
-
-    # Creating a folder for the data files
-    data_directory = project_directory / "data"
-    pathlib.Path.mkdir(data_directory, exist_ok=True)
-
-    # Creating the default config file
-    default_config_file_path = data_directory / "defaultconfig.pickle"
-    default_config_file_path.touch()
 
     def __init(self):
         self.create_default_config()
