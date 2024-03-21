@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 
-import src.constants as constants
+import core.constants as constants
 
 
 class Application(tk.Frame):

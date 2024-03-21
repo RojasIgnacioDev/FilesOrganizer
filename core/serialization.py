@@ -1,9 +1,12 @@
+import sys
 import pickle
 import pathlib
 
+import core.constants as constants
 
-# The supported file extensions
-default_data = {
+class Serializer():
+    # The supported file extensions
+    default_config = {
     "extensions": {
 
         "image": [
@@ -111,19 +114,59 @@ default_data = {
         pathlib.Path(pathlib.Path.home() / "Downloads")
     ]
 }
+    
+    DATA_FOLDER_NAME = "data"
+    DEFAULT_CONFIG_FILE_NAME = "defaultconfig.pickle"
+    # Getting the projects directory
+    current_file_path = pathlib.Path(__file__)
+    project_src_directory = current_file_path.parent
+    project_directory = project_src_directory.parent
 
-current_file_path = pathlib.Path(__file__)
-project_src_path = current_file_path.parent
-project_path = project_src_path.parent
-default_data_directory = pathlib.Path(project_path)
+    # Creating a folder for the data files
+    data_directory = project_directory / "data"
+    pathlib.Path.mkdir(data_directory, exist_ok=True)
 
-def serialize_data():
-    try:
-        with open(current_file_path, "wb") as pickle_file:
-            pickle.dump(default_data, pickle_file)
-        print("Data serialized successfully.")
-    except Exception as e:
-        print(f"Error occurred during serialization: {e}")
+    # Creating the default config file 
+    default_config_file_path = data_directory / "defaultconfig.pickle"
+    default_config_file_path.touch()
 
+    def __init(self):
+        self.create_default_config()
 
-# serialize_data()
+    def create_default_config(self):
+        """
+        Creates a binary file containing the default config
+        """
+        # Setting the data folder and the default config file names 
+        project_path = self._project_path()
+        data_folder = project_path / self.DATA_FOLDER_NAME
+        default_config_file = pathlib.Path(data_folder) / self.DEFAULT_CONFIG_FILE_NAME
+
+        # Creating the folder and the file
+        data_folder.mkdir(exist_ok=True)
+        default_config_file.touch(exist_ok=True)
+        
+        # Comparing if the default config is not modified
+        with open(default_config_file, "wb") as file:
+            pickle.dump(self.default_config, file)
+
+    def _project_path(self) -> pathlib.Path:
+        current_file_path = pathlib.Path(__file__)
+        for parent in current_file_path.parents:
+            if parent.name == constants.PROJECT_NAME:
+                return parent
+        raise ValueError("Project path not found. Check the project folder name.")
+
+    def serialize(self, obj, path):
+        try:
+            with open(path, "wb") as pickle_file:
+                pickle.dump(obj, pickle_file)
+        except Exception as e:
+            raise FileNotFoundError(f"{path.as_posix()} doesn't exists")
+
+    def deserialization(self, path):
+        try:
+            with open(path, "rb"):
+                return pickle.load(path)
+        except:
+            raise FileNotFoundError(f"{path.as_posix()} doesn't exists")
