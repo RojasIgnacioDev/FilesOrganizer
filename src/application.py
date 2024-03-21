@@ -16,15 +16,14 @@ class Application(tk.Frame):
 
     def __init__(self, parent=tk.Tk()):
         tk.Frame.__init__(self, parent, padx=8, pady=8)
+
+        # The main window configuration
         self.parent = parent
         self.parent.title("File Organizer")
         self.parent.geometry(f"{self.MIN_WIDTH}x{self.MIN_HEIGHT}")
         self.parent.minsize(self.MIN_WIDTH, self.MIN_HEIGHT)
         self.parent.maxsize(self.MAX_WIDTH, self.MAX_HEIGHT)
-
         self.pack(expand=True, fill="both")
-
-        self.sort_subfolders_value = tk.BooleanVar()
 
         # Workspaces Tree
         self.workspaces_tree = ttk.Treeview(self, height=4)
@@ -32,12 +31,13 @@ class Application(tk.Frame):
         self.workspaces_tree["columns"] = ("Status")
         self.workspaces_tree.heading("#0", text="Workspaces")
         self.workspaces_tree.heading("Status", text="Status")
-        self.workspaces_tree.insert("", tk.END, text="Downloads", values=["Organized"])
+        self.workspaces_tree.insert(
+            "", tk.END, text="Downloads", values=["Organized"])
+
         # New Workspace Button
         self.new_workspace_button = ttk.Button(
             self,
             text="New Workspace",
-            width=constants.LARGE_WIDGET_WIDTH,
         )
         self.new_workspace_button.pack(side="top", expand=True, fill="both")
 
@@ -45,11 +45,11 @@ class Application(tk.Frame):
         self.organize_button = ttk.Button(
             self,
             text="Organize",
-            width=constants.LARGE_WIDGET_WIDTH,
         )
         self.organize_button.pack(side="top", expand=True, fill="both")
 
         # Sort Into Folders Checkbox
+        self.sort_subfolders_value = tk.BooleanVar()
         self.sort_subfolders = ttk.Checkbutton(
             self,
             text="Sort Into Subfolders",
@@ -63,4 +63,3 @@ class Application(tk.Frame):
         for child in self.winfo_children():
             child: tk.Widget
             child.pack(pady=4)
-
