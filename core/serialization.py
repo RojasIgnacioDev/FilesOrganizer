@@ -6,8 +6,13 @@ import core.constants as constants
 
 
 class Serializer():
+    DATA_DIRECTORY = pathlib.Path("data")
+    DEFAULT_CONFIG_FILE_NAME = pathlib.Path("defaultconfig.pickle")
+    USER_CONFIG_FILE_NAME = pathlib.Path("userconfig.pickle")
     # The supported file extensions
-    default_config = {
+
+    # The supported file extensions
+    default_config_data = {
         "extensions": {
 
             "image": [
@@ -116,29 +121,38 @@ class Serializer():
         ]
     }
 
-    DATA_FOLDER_NAME = "data"
-    DEFAULT_CONFIG_FILE_NAME = "defaultconfig.pickle"
-
-    def __init(self):
-        self.create_default_config()
-
     def create_default_config(self) -> None:
         """
         Creates a binary file containing the default config
         """
         # Setting the data folder and the default config file names
-        project_path = self._project_path()
-        data_folder = project_path / self.DATA_FOLDER_NAME
-        default_config_file = pathlib.Path(
-            data_folder) / self.DEFAULT_CONFIG_FILE_NAME
-
-        # Creating the folder and the file
-        data_folder.mkdir(exist_ok=True)
-        default_config_file.touch(exist_ok=True)
+        default_config_file = self._create_file(
+            self.DATA_DIRECTORY, self.DEFAULT_CONFIG_FILE_NAME)
 
         # Comparing if the default config is not modified
-        with open(default_config_file, "wb") as file:
-            pickle.dump(self.default_config, file)
+        self._serialize(self.default_config_data, default_config_file)
+
+    def default_config(self) -> object:
+        return self._deserialize(self._default_config_path())
+
+    def create_user_config(self):
+        self._create_file(self.DATA_DIRECTORY, self.USER_CONFIG_FILE_NAME)
+
+    def _default_config_path(self):
+        return pathlib.Path(self._project_path() / self.DATA_DIRECTORY / self.DEFAULT_CONFIG_FILE_NAME)
+
+    def _create_file(self, folder_directory, file_name):
+        # # Creating the folder and the file paths
+        project_path = self._project_path()
+        folder_path = project_path / folder_directory
+        file_path = pathlib.Path(
+            folder_path) / file_name
+
+        # Creating the folder and the file themselves
+        folder_path.mkdir(exist_ok=True)
+        file_path.touch(exist_ok=True)
+
+        return file_path
 
     def _project_path(self) -> pathlib.Path:
         current_file_path = pathlib.Path(__file__)
@@ -148,16 +162,18 @@ class Serializer():
         raise ValueError(
             "Project path not found. Check the project folder name.")
 
-    def serialize(self, obj, path) -> None:
+    def _serialize(self, obj, path) -> None:
         try:
             with open(path, "wb") as pickle_file:
                 pickle.dump(obj, pickle_file)
         except Exception as e:
             raise FileNotFoundError(f"{path.as_posix()} doesn't exists")
 
-    def deserialize(self, path) -> object:
+    def _deserialize(self, path) -> object:
         try:
             with open(path, "rb"):
                 return pickle.load(path)
         except:
             raise FileNotFoundError(f"{path.as_posix()} doesn't exists")
+
+Serializer()
