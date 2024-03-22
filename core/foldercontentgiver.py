@@ -1,3 +1,6 @@
+import sys
+sys.path.append("F:/DATOS/Documents/Projects/Python Projects/FilesOrganizer")
+
 from importlib import import_module
 from os import stat
 from stat import (
@@ -9,7 +12,7 @@ import pathlib
 from enum import Enum
 from enum import auto
 
-from constants import DirectoryType
+from core.constants import DirectoryType
 
 class FolderContentGiver:
     banned_file_attributes = [

@@ -4,7 +4,6 @@ import importlib
 
 from foldercontentgiver import FolderContentGiver
 from filemover import FileMover
-from sortconfigmanager import SortConfigManager
 import constants as constants
 
 
@@ -31,5 +30,3 @@ def is_file_type(file_path, extension_type):
     file : str = file_path.name
     file_extension = "." + file.split(".", -1)[1]
     return file_extension == extension_type
-
-sort(SortConfigManger.default_config)
