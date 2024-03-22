@@ -1,14 +1,15 @@
+from importlib import import_module
 from os import stat
 from stat import (
     FILE_ATTRIBUTE_HIDDEN as HIDDEN_FILE,
     FILE_ATTRIBUTE_SYSTEM as SYSTEM_FILE,
     FILE_ATTRIBUTE_READONLY as READONLY_FILE,
 )
-from pathlib import Path
+import pathlib
 from enum import Enum
 from enum import auto
 
-from src.constants import DirectoryType
+from constants import DirectoryType
 
 class FolderContentGiver:
     banned_file_attributes = [
@@ -17,9 +18,9 @@ class FolderContentGiver:
         READONLY_FILE,
     ]
 
-    def __init__(self, path):
+    def __init__(self, path: pathlib.Path):
         self.path = path
-        self.directories = list[Path]
+        self.directories = list[pathlib.Path]
 
     def files_and_folders(self, format=DirectoryType.PATH_OBJECT):
         """
@@ -64,14 +65,14 @@ class FolderContentGiver:
         directories_names = [dir.as_posix() for dir in directories]
         return directories_names
 
-    def _get_raw_directories(self, path: Path):
+    def _get_raw_directories(self, path: pathlib.Path):
         assert path.is_dir(), "The path provided is not a folder"
 
         # Get the directories of the Downloads folder
         raw_directories = [dir for dir in path.iterdir()]
         return raw_directories
 
-    def _secure_directories(self, path : Path):
+    def _secure_directories(self, path : pathlib.Path):
         unsecure_directories = self._get_raw_directories(path)
         secure_directories = []
 
@@ -81,7 +82,7 @@ class FolderContentGiver:
         
         return secure_directories
     
-    def _has_banned_file_attributes(self, directory: Path):
+    def _has_banned_file_attributes(self, directory: pathlib.Path):
         attributes = stat(directory).st_file_attributes
         # Check against all banned attributes
         for banned_attribute in self.banned_file_attributes:

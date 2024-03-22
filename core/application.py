@@ -1,8 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 
-import core.constants as constants
-
+from core.serialization import Serializer
 
 class Application(tk.Frame):
     """
@@ -63,3 +62,6 @@ class Application(tk.Frame):
         for child in self.winfo_children():
             child: tk.Widget
             child.pack(pady=4)
+
+def on_new_workspace_click():
+    pass
