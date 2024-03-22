@@ -90,7 +90,7 @@ class ConfigManager():
         serialize(obj, self._user_config_path())
 
     def is_workspace_organized(self, config, workspace_name):
-        workspace = [ws for ws in config["workspaces"] if ws["name"]].pop()
+        workspace = [ws for ws in config["workspaces"] if ws["name"] == workspace_name].pop()
         workspace_path = workspace["path"]
         workspace_files = FolderContentGiver(workspace_path).files()
         return len(workspace_files) == 0
