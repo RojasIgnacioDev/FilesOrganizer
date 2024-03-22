@@ -1,8 +1,9 @@
 import tkinter as tk
 from tkinter import ttk
+from tkinter import filedialog
 
-from core.serialization import Serializer
-
+from core.serialization import serialize
+from core.configmanager import ConfigManager
 class Application(tk.Frame):
     """
     The Application class creates the UI components
@@ -24,19 +25,22 @@ class Application(tk.Frame):
         self.parent.maxsize(self.MAX_WIDTH, self.MAX_HEIGHT)
         self.pack(expand=True, fill="both")
 
+        self.parent.bind("<FocusOut>", self.configure_tree)
+
         # Workspaces Tree
         self.workspaces_tree = ttk.Treeview(self, height=4)
         self.workspaces_tree.pack(side="top", expand=True, fill="both")
         self.workspaces_tree["columns"] = ("Status")
         self.workspaces_tree.heading("#0", text="Workspaces")
         self.workspaces_tree.heading("Status", text="Status")
-        self.workspaces_tree.insert(
-            "", tk.END, text="Downloads", values=["Organized"])
+        #self.workspaces_tree.insert(
+        #    "", tk.END, text="Downloads", values=["Organized"])
 
         # New Workspace Button
         self.new_workspace_button = ttk.Button(
             self,
             text="New Workspace",
+            command=lambda: self.Events.on_new_workspace_click(self)
         )
         self.new_workspace_button.pack(side="top", expand=True, fill="both")
 
@@ -62,6 +66,44 @@ class Application(tk.Frame):
         for child in self.winfo_children():
             child: tk.Widget
             child.pack(pady=4)
+        
+        self.configure_tree()
 
-def on_new_workspace_click():
-    pass
+    def configure_tree(self):
+        self.workspaces_tree.delete(*self.workspaces_tree.get_children())
+
+        manager = ConfigManager()
+        user_config = manager.user_config()
+        workspaces = manager.workspaces(user_config)
+
+        for workspace in workspaces:
+            workspace_name = workspace["name"]
+            workspace_is_organized = manager.is_workspace_organized(user_config, workspace_name)
+            status = "Organized" if workspace_is_organized else "Not Organized"
+            self.workspaces_tree.insert(
+            "", tk.END, text=workspace_name, values=[str(status)])
+
+    
+    class Events:
+        @staticmethod
+        def on_new_workspace_click(app):
+            root = tk.Toplevel()
+            root.withdraw()
+
+            manager = ConfigManager()
+            user_config = manager.user_config()
+            directory_path = filedialog.askdirectory()
+            
+            manager.workspace(user_config, directory_path, "")
+
+            app.configure_tree()
+            root.destroy()
+        
+        @staticmethod
+        def on_focus_out():
+            pass
+            
+            
+
+            
+
