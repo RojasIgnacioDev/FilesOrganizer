@@ -17,8 +17,9 @@ class ConfigManager():
     default_config_data = None
 
     def __init__(self) -> None:
-        if not isinstance(self.default_config_data, object):
-            self._create_default_config()
+        self._create_default_config()
+        
+        # Creates a user config file 
         if not self._user_config_exists():
             self._create_user_config()
         
@@ -68,6 +69,7 @@ class ConfigManager():
         Overwrites the current user config with the default data
         """
         user_config_path = self._user_config_path()
+        self._create_default_config()
         serialize(self.default_config_data, user_config_path)
  
     # not used
