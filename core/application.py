@@ -4,86 +4,74 @@ from tkinter import filedialog
 
 from core.serialization import serialize
 from core.configmanager import ConfigManager
-class Application(tk.Frame):
+class Application(tk.Tk):
     """
     The Application class creates the UI components
     """
+
+    # The minimum and maximum size the window can be resized
     MIN_WIDTH = 400
     MIN_HEIGHT = 300
+    MAX_WIDTH = 1280
+    MAX_HEIGHT = 768
 
-    MAX_WIDTH = 600
-    MAX_HEIGHT = 450
+    # The frame containg the buttons
+    left_frame = None
+    # The frame containing the workspaces
+    right_frame = None
 
-    def __init__(self, parent=tk.Tk()):
-        tk.Frame.__init__(self, parent, padx=8, pady=8)
+    # The padx and pady value used for every widget
+    BUTTON_CONFIG = {"master": left_frame}
+    
+    FRAME_PACKING = {"padx": 8, "pady": 32, "expand": True, "fill": "both"}
+    BUTTON_PACKING = {"padx": 4, "pady": 16, "fill": "both"}
 
-        # The main window configuration
-        self.parent = parent
-        self.parent.title("File Organizer")
-        self.parent.geometry(f"{self.MIN_WIDTH}x{self.MIN_HEIGHT}")
-        self.parent.minsize(self.MIN_WIDTH, self.MIN_HEIGHT)
-        self.parent.maxsize(self.MAX_WIDTH, self.MAX_HEIGHT)
-        self.pack(expand=True, fill="both")
+    def __init__(self):
+        tk.Tk.__init__(self,)
 
-        self.parent.bind("<FocusOut>", self.configure_tree)
+        self._setup_window()
+        self._setup_widgets()
 
-        # Workspaces Tree
-        self.workspaces_tree = ttk.Treeview(self, height=4)
-        self.workspaces_tree.pack(side="top", expand=True, fill="both")
-        self.workspaces_tree["columns"] = ("Status")
-        self.workspaces_tree.heading("#0", text="Workspaces")
-        self.workspaces_tree.heading("Status", text="Status")
-        #self.workspaces_tree.insert(
-        #    "", tk.END, text="Downloads", values=["Organized"])
+    def _setup_window(self):
+        self.title("File Organizer")
+        self.geometry(f"{self.MIN_WIDTH}x{self.MIN_HEIGHT}")
+        self.minsize(self.MIN_WIDTH, self.MIN_HEIGHT)
+        self.maxsize(self.MAX_WIDTH, self.MAX_HEIGHT)
 
-        # New Workspace Button
-        self.new_workspace_button = ttk.Button(
-            self,
-            text="New Workspace",
-            command=lambda: self.Events.on_new_workspace_click(self)
-        )
-        self.new_workspace_button.pack(side="top", expand=True, fill="both")
+    def _setup_widgets(self):
+        # Left frame
+        ### The frame where the the buttons are
+        self.left_frame = ttk.Frame(self)
+        self.left_frame.pack(side="left", **self.FRAME_PACKING)
+        self.left_frame.rowconfigure(0, weight=1)
+        self.left_frame.rowconfigure(1, weight=2)
+        self.left_frame.rowconfigure(2, weight=1)
+        self.left_frame.columnconfigure(0, weight=1)
+        
+        # The frame where it shows the workspaces
+        self.right_frame = ttk.Frame(self)
+        self.right_frame.pack(side="right", **self.FRAME_PACKING)
+
+        ttk.Separator(self.left_frame, orient="horizontal").grid(column=0, row=0, ipady=40)
+        ttk.Separator(self.left_frame, orient="horizontal").grid(column=0, row=5, ipady=40)
 
         # Organize Button
-        self.organize_button = ttk.Button(
-            self,
-            text="Organize",
-        )
-        self.organize_button.pack(side="top", expand=True, fill="both")
+        ### The button that organizes the files when it is pressed
+        self.organize_button = ttk.Button(self.left_frame)
+        self.organize_button.configure(text="Organize")
+        self.organize_button.grid(column=0, row=1, sticky=tk.NSEW)
 
-        # Sort Into Folders Checkbox
-        self.sort_subfolders_value = tk.BooleanVar()
-        self.sort_subfolders = ttk.Checkbutton(
-            self,
-            text="Sort Into Subfolders",
-            offvalue=2,
-            variable=self.sort_subfolders_value
-        )
-        self.sort_subfolders.pack(side="top", expand=True, fill="both")
-
-        ########################################################################
-
-        for child in self.winfo_children():
-            child: tk.Widget
-            child.pack(pady=4)
+        # New Workspace Button
+        ### The button that creates a new workspace to be organized
+        self.new_workspace_button = ttk.Button(self.left_frame)
+        self.new_workspace_button.configure(text="New Workspace")
+        self.new_workspace_button.grid(column=0, row=2, sticky=tk.NSEW)
         
-        self.configure_tree()
+        # Vertical Separator
+        ### The separator that is in the middle of the window
+        self.separator = ttk.Separator(self, orient="vertical")
+        self.separator.pack(side="left", **self.FRAME_PACKING)
 
-    def configure_tree(self):
-        self.workspaces_tree.delete(*self.workspaces_tree.get_children())
-
-        manager = ConfigManager()
-        user_config = manager.user_config()
-        workspaces = manager.workspaces(user_config)
-
-        for workspace in workspaces:
-            workspace_name = workspace["name"]
-            workspace_is_organized = manager.is_workspace_organized(user_config, workspace_name)
-            status = "Organized" if workspace_is_organized else "Not Organized"
-            self.workspaces_tree.insert(
-            "", tk.END, text=workspace_name, values=[str(status)])
-
-    
     class Events:
         @staticmethod
         def on_new_workspace_click(app):
@@ -93,7 +81,6 @@ class Application(tk.Frame):
             manager = ConfigManager()
             user_config = manager.user_config()
             directory_path = filedialog.askdirectory()
-            
             manager.workspace(user_config, directory_path, "")
 
             app.configure_tree()
@@ -101,7 +88,7 @@ class Application(tk.Frame):
         
         @staticmethod
         def on_focus_out():
-            pass
+            raise NotImplementedError()
             
             
 
