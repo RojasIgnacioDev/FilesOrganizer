@@ -10,7 +10,7 @@ def serialize(obj, path) -> None:
     except Exception as e:
         raise FileNotFoundError(f"{path.as_posix()} doesn't exists")
 
-def deserialize(path) -> object:
+def deserialize(path):
     try:
         with open(path, "rb") as file_path:
             return pickle.load(file_path)

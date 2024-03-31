@@ -16,13 +16,19 @@ def sort(config):
         giver = FolderContentGiver(workspace)
         unsorted_files = giver.files()
         
-        for extension_type in extensions:
+        for extension in extensions:
             # extension type are image, document, video, etc
-            for extension in extensions[extension_type]:
-                # extension are .png, .jpg, .exe, etc
+            for format in extensions[extension]:
+                # format are .png, .jpg, .exe, etc
 
-                files = [file for file in unsorted_files if is_file_type(file, extension)]
+                # Gets the files with an specific format
+                files = [file for file in unsorted_files if is_file_type(file, format)]
+
                 if len(files) > 0:
+                    # move every file into its corresponding folder
+                    for file in files:
+                        
+
                     pass
     pass    
 
