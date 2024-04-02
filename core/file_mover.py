@@ -7,7 +7,7 @@ class FileMover:
     """
     
     @staticmethod
-    def move_directories(destination_folder: pathlib.Path, directories: list):
+    def move(destination_folder: pathlib.Path, directories: list):
         if not destination_folder.is_dir():
             raise FileMover.FolderPathError()
         
