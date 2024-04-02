@@ -227,7 +227,7 @@ class ConfigManager():
                 ".pptx",  # Microsoft PowerPoint Open XML Presentation
                 ".txt",   # Plain Text Document
             ]        
-        compressed_formats = [".7z", ".zip"]
+        compressed_formats = [".7z", ".zip", ".rar"]
         custom_formats = []
 
         self.extension(self.default_config_data, "Images", image_formats)
