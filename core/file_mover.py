@@ -5,10 +5,10 @@ class FileMover:
     """
     Changes the location of directories
     """
-
+    
     @staticmethod
     def move_directories(destination_folder: pathlib.Path, directories: list):
-        if destination_folder:
+        if not destination_folder.is_dir():
             raise FileMover.FolderPathError()
         
         for directory in directories:
