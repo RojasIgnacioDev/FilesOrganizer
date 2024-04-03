@@ -4,6 +4,7 @@ from tkinter import filedialog
 
 from core.serialization import serialize
 from core.config_manager import ConfigManager
+from core.sort import sort
 
 class Application(tk.Tk):
     """
@@ -114,13 +115,8 @@ class Application(tk.Tk):
         @staticmethod
         def on_organize_click():
             user_config = ConfigManager.user_config()
-            ConfigManager.print_workspaces(user_config)
+            sort(user_config)
 
         @staticmethod
         def on_focus_out():
             raise NotImplementedError()
-            
-            
-
-            
-

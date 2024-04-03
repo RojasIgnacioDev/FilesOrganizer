@@ -35,7 +35,7 @@ class FolderContentGiver:
 
     def files(self, format=DirectoryType.PATH_OBJECT):
         """
-        Returns a list with all the files, excluding the folders, in the specified path at the class instantiation
+        Returns a list with all the files paths, excluding the folders, in the specified path at the class instantiation
         """
         directories = self._secure_directories(self.path)
         files = [dir for dir in directories if dir.is_file()]
@@ -69,6 +69,9 @@ class FolderContentGiver:
         return directories_names
 
     def _get_raw_directories(self, path: pathlib.Path):
+        """
+        Returns all the directories inside a folder 
+        """
         assert path.is_dir(), "The path provided is not a folder"
 
         # Get the directories of the Downloads folder
@@ -76,6 +79,9 @@ class FolderContentGiver:
         return raw_directories
 
     def _secure_directories(self, path : pathlib.Path):
+        """
+        Returns a list of secure directories
+        """
         unsecure_directories = self._get_raw_directories(path)
         secure_directories = []
 
