@@ -2,7 +2,6 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog
 
-from core.serialization import serialize
 from core.config_manager import ConfigManager
 from core.sort import sort
 
@@ -33,15 +32,20 @@ class Application(tk.Tk):
 
         self._setup_window()
         self._setup_widgets()
-        self._start_app_with_default_config()
 
     def _setup_window(self):
+        """
+        Setups the main configuration of the window
+        """
         self.title("File Organizer")
         self.geometry(f"{self.MIN_WIDTH}x{self.MIN_HEIGHT}")
         self.minsize(self.MIN_WIDTH, self.MIN_HEIGHT)
         self.maxsize(self.MAX_WIDTH, self.MAX_HEIGHT)
 
     def _setup_widgets(self):
+        """
+        Setups all the widgets in the window of the program
+        """
         #
         # LEFT
         #
@@ -95,27 +99,24 @@ class Application(tk.Tk):
         scrollbar = ttk.Scrollbar(self.right_frame)
         self.workspaces_tree.config(yscrollcommand=scrollbar.set, show="tree")
 
-    def _start_app_with_default_config(self):
-        ConfigManager().reset_user_config()
-
     class Events:
+        """
+        Commands used for the widgets of the window
+        """
         @staticmethod
         def on_new_workspace_click(app):
             root = tk.Toplevel()
             root.withdraw()
 
             manager = ConfigManager()
-            user_config = manager.user_config()
             directory_path = filedialog.askdirectory()
-            manager.workspace(user_config, directory_path, "")
 
             app.configure_tree()
             root.destroy()
         
         @staticmethod
         def on_organize_click():
-            user_config = ConfigManager.user_config()
-            sort(user_config)
+            pass
 
         @staticmethod
         def on_focus_out():
