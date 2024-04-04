@@ -4,6 +4,7 @@ from enum import auto
 
 PROJECT_NAME = "FilesOrganizer"
 PROJECT_PATH = pathlib.Path(__file__).parent.parent
+DOWNLOADS_PATH = pathlib.Path.home() / "Downloads"
 
 class DirectoryType(Enum):
     """
