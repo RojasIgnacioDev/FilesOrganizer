@@ -24,7 +24,7 @@ class Application(tk.Tk):
     # The padx and pady value used for every widget
     BUTTON_CONFIG = {"master": left_frame}
     
-    FRAME_PACKING = {"padx": 8, "pady": 32, "expand": True, "fill": "both"}
+    FRAME_PACKING = {"padx": 32, "pady": 8, "expand": True, "fill": "both"}
     BUTTON_PACKING = {"padx": 4, "pady": 16, "fill": "both"}
 
     def __init__(self):
@@ -57,7 +57,7 @@ class Application(tk.Tk):
         self.left_frame.rowconfigure(1, weight=4)
         self.left_frame.rowconfigure(2, weight=1)
         self.left_frame.columnconfigure(0, weight=1)
-        self.left_frame.pack(side="left", **self.FRAME_PACKING)
+        self.left_frame.pack(side="bottom", **self.FRAME_PACKING)
         
         # Organize Button
         ### The button that organizes the files when it is pressed
@@ -66,21 +66,10 @@ class Application(tk.Tk):
         self.organize_button.config(command=self.Events.on_organize_click)
         self.organize_button.grid(column=0, row=1, sticky=tk.NSEW)
 
-        #@TODO a
-        # New Workspace Button
-        ### The button that creates a new workspace to be organized
-        self.new_workspace_button = ttk.Button(self.left_frame)
-        self.new_workspace_button.config(text="New Workspace")
-        # For now, it will not be placed
-        #self.new_workspace_button.grid(column=0, row=2, sticky=tk.NSEW)
-
-        ttk.Separator(self.left_frame, orient="horizontal").grid(column=0, row=0, ipady=40)
-        ttk.Separator(self.left_frame, orient="horizontal").grid(column=0, row=5, ipady=40)
-
         # Vertical Separator
         ### The separator that is in the middle of the window
-        self.separator = ttk.Separator(self, orient="vertical")
-        self.separator.pack(side="left", **self.FRAME_PACKING)
+        self.separator = ttk.Separator(self, orient="horizontal")
+        self.separator.pack(side="bottom", **self.FRAME_PACKING)
 
         #
         # RIGHT
