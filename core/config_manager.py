@@ -3,8 +3,6 @@ sys.path.append("F:/DATOS/Documents/Projects/Python Projects/FilesOrganizer")
 
 import pathlib
 
-from core.serialization import serialize
-from core.serialization import deserialize
 from core.folder_content_giver import FolderContentGiver
 import core.constants as constants
 
@@ -19,10 +17,6 @@ class ConfigManager():
     # Constructor
     def __init__(self) -> None:
         self._create_default_config()
-        
-        # Creates a user config file 
-        if not self._user_config_exists():
-            self._create_user_config()
 
     @staticmethod
     def print_workspaces(config):
@@ -57,7 +51,7 @@ class ConfigManager():
             path = pathlib.Path(path)
         workspaces = config["workspaces"]
         workspaces.append({"name": path.name, "path": path, "prefix": prefix})
-        ConfigManager._save_user_config(config)
+        
 
     @staticmethod
     def extension(config, category, formats: list):
@@ -71,24 +65,7 @@ class ConfigManager():
     def default_config():
         return ConfigManager.default_config_data
 
-    @staticmethod
-    def user_config() -> dict:
-        """
-        Returns the User config by desearializing the userconfig.pickle
-        """
-        user_config_path = ConfigManager._user_config_path()
-        ConfigManager._user_config_path()
-        user_config = deserialize(user_config_path)
-        return user_config
         
-    #@NotUsed
-    def reset_user_config(self):
-        """
-        Overwrites the current user config with the default data
-        """
-        user_config_path = self._user_config_path()
-        self._create_default_config()
-        serialize(self.default_config_data, user_config_path)
  
     #@NotUsed
     def folder(self, from_path: pathlib.Path, prefix_name, last_name):
@@ -106,11 +83,6 @@ class ConfigManager():
     def move_files_to_subfolder(self):
         raise NotImplementedError()
 
-    # Private methods
-    @staticmethod
-    def _save_user_config(obj):
-        serialize(obj, ConfigManager._user_config_path())
-
     def is_workspace_organized(self, config, workspace_name):
         workspace = [ws for ws in config["workspaces"] if ws["name"] == workspace_name].pop()
         workspace_path = workspace["path"]
@@ -120,12 +92,7 @@ class ConfigManager():
     def _user_config_exists(self):
         return self._user_config_path().exists()
     
-    def _create_user_config(self):
-        """"""
-        self._create_file(self.DATA_DIRECTORY, self.USER_CONFIG_PATH)
-        
-        serialize(self.default_config(), self._user_config_path())
-            
+ 
     def _create_default_config(self):
         """
         Creates the default config data at the instantiation of the class object
