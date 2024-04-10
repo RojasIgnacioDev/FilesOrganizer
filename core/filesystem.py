@@ -1,38 +1,45 @@
-import constants
-import os
+from core import constants
 import pathlib
+import os
 import sys
 sys.path.append("F:/DATOS/Documents/Projects/Python Projects/FilesOrganizer")
+
 
 # TODO: finish the folder class so it can store all the files stored in it
 # TODO: make a method that returns all its files stored in
 # TODO: make the folder moves its files that do not has one of the extensions to the parent dir
 
+# region Workspace and DownloadsWorkspace classes
+
 class Workspace:
     folders = {}
 
     def __init__(self, path: pathlib.Path) -> None:
-        self.workspace_folder = Folder(path, path.name)
+        self.folder = Folder(path, path.name)
 
     def add_special_folder(self, folder_name, extensions):
         """Adds a new special folder in the workspace folder"""
-        new_folder = SpecialFolder(self.workspace_folder, folder_name, extensions)
+        new_folder = SpecialFolder(self.folder.path, folder_name, extensions)
         self.folders[folder_name] = new_folder
-    
+
     def directories(self):
         """Returns files and folders"""
-        return [dir for dir in self.workspace_folder.directories()]
+        return [dir for dir in self.folder.directories()]
 
 
 class DownloadsWorkspace(Workspace):
     """Creates a Workspace in the system Downloads folder"""
+
     def __init__(self, path=constants.DOWNLOADS_PATH) -> None:
         super().__init__(path)
         self.add_special_folder("Images", constants.image_formats)
-    
+
     def get_extension_files(self, extensions_list):
         """Returns a list of File objects representing files that fulfill having a extension in the extensions_list"""
 
+# endregion
+
+# region Folder and SpecialFolder classes
 
 class Folder:
     """Represents a directory as a folder"""
@@ -50,29 +57,30 @@ class Folder:
         file_objects_list = [
             File(file_path) for file_path in self.path.iterdir() if file_path.is_file()]
         return file_objects_list
-    
+
     def folders(self):
         """Returns a list of Folder objects"""
         folder_path_list = [
             folder_path for folder_path in self.path.iterdir() if folder_path.is_dir()]
-        
+
         folder_objects_list = []
         for path in folder_path_list:
             folder_objects_list.append(Folder(path, path.name))
-        
+
         return folder_objects_list
-    
+
     def directories(self):
         """Returns a list of folders and files"""
         path_list = [path for path in self.path.iterdir()]
         return path_list
+
 
 class SpecialFolder(Folder):
     """A type of folder that only holds files with specific extensions"""
 
     extensions: list
 
-    def __init__(self, path, name: str, extensions: list):
+    def __init__(self, path: pathlib.Path, name: str, extensions: list):
         super().__init__(path, name)
         self.extensions = extensions
         self.remove_stranger_files()
@@ -93,6 +101,8 @@ class SpecialFolder(Folder):
 
         return False
 
+# endregion
+
 class File:
     """Represents a file"""
 
@@ -104,5 +114,4 @@ class File:
         self.extension = self.path.suffix
 
 # For debugging
-Folder(constants.DOWNLOADS_PATH, "Audios")
-pass
+# Folder(constants.DOWNLOADS_PATH, "Audios")
