@@ -25,6 +25,7 @@ class Workspace:
 
 
 class DownloadsWorkspace(Workspace):
+    """Creates a Workspace in the system Downloads folder"""
     def __init__(self, path=constants.DOWNLOADS_PATH) -> None:
         super().__init__(path)
         self.add_special_folder("Images", constants.image_formats)
