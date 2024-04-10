@@ -19,7 +19,8 @@ class Workspace:
         new_folder = SpecialFolder(self.workspace_folder, folder_name, extensions)
         self.folders[folder_name] = new_folder
     
-    def get_content(self):
+    def directories(self):
+        """Returns files and folders"""
         return [dir for dir in self.workspace_folder.directories()]
 
 
