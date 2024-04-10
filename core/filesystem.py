@@ -48,7 +48,12 @@ class Folder:
 
     def __init__(self, path: pathlib.Path, name: str):
         # self.path = pathlib.Path(constants.DOWNLOADS_PATH / name)
-        self.path = path / name
+        
+        if not path.name == name:
+            self.path = path / name
+        else:
+            self.path = path
+            
         self.path.mkdir(exist_ok=True)
         self.name = self.path.name
 
@@ -115,3 +120,4 @@ class File:
 
 # For debugging
 # Folder(constants.DOWNLOADS_PATH, "Audios")
+
