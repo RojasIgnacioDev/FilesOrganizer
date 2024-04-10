@@ -10,7 +10,7 @@ class FileMover:
     @staticmethod
     def move_with_rename(destination_folder: pathlib.Path, directories: list):
         """
-        Takes a list of directories and moves them into the destination folder, and renames the files if there's already
+        Takes a list of directories and moves them into the destination folder, renaming the files if there is already identical ones
         """
         for file_path in directories:
             destination_path = destination_folder / file_path.name
@@ -27,6 +27,7 @@ class FileMover:
     
     @staticmethod
     def move_with_overwrite(destination_folder: pathlib.Path, directories: list):
+        """Moves files into the new destination_folder path, overwriting existing identical files"""
         for file_path in directories:
             try:
                 shutil.move(file_path, destination_folder)
